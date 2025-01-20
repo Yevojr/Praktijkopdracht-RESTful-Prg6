@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+// import gamesRouter from './routes/games.js'
 
 const app = express();
 mongoose.connect(`mongodb://127.0.0.1:27017/${process.env.DB_NAME}`);
@@ -24,7 +25,7 @@ app.get('/', (req, res) => {
     res.json({message: 'Welcome to my games webservice!'});
 });
 
-// app.use()
+// app.use("/games", gamesRouter);
 
 app.listen(process.env.EXPRESS_PORT, () => {
     console.log('Express server listening on port: ' + process.env.EXPRESS_PORT);
