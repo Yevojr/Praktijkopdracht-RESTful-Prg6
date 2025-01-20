@@ -60,7 +60,14 @@ router.options('/:id', (req, res) => {
 
 
 router.get('/:id', async (req, res) => {
-
+    try
+    {
+        const game = await Game.findOne({_id:req.params.id})
+        res.json(game)
+    } catch (e) {
+        console.log(e);
+        res.status(404).send()
+    }
 });
 
 router.post('/:id', async (req, res) => {
@@ -68,6 +75,13 @@ router.post('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-
+    try
+    {
+        await Game.deleteOne({_id:req.params.id})
+        res.status(200).send();
+    } catch (e) {
+        console.log(e);
+        res.status(404).send()
+    }
 });
 export default router;

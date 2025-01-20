@@ -4,6 +4,9 @@ const gameSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
     genre: { type: String, required: true },
+    image: {type: String, required: false, default: null, },
+    releaseDate: { type: Date, required: false, default: null, },
+    rating: { type: Number, required: false, default: null, },
 }, {
     toJSON: {
         virtuals: true,
