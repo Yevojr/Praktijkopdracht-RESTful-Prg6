@@ -44,9 +44,13 @@ router.post('/seed', async (req, res) => {
                title: faker.word.adverb(),
                description: faker.lorem.paragraph({min: 2, max: 5}),
                genre: faker.word.noun(),
+               image: faker.image.url(),
+               releaseDate: faker.date.anytime(),
+               rating: faker.number.int({min: 1, max: 10}),
            });
        }
 
+       res.status(201).json(req.body);
        res.json({message: `${req.body.amount} games have been added!`})
    } catch (e) {
        console.log(e);
@@ -55,7 +59,9 @@ router.post('/seed', async (req, res) => {
 })
 
 router.options('/:id', (req, res) => {
-
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST, PUT, DELETE, PATCH, OPTIONS');
+    res.status(204).send();
 });
 
 
@@ -70,9 +76,9 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/:id', async (req, res) => {
-
-});
+// router.post('/:id', async (req, res) => {
+//
+// });
 
 router.delete('/:id', async (req, res) => {
     try
