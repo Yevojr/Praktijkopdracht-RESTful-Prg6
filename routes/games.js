@@ -7,8 +7,8 @@ const router = express.Router();
 
 
 router.options('/', (req, res) => {
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+    res.setHeader('Allow', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.status(204).send();
 })
 
@@ -28,42 +28,8 @@ router.get('/', async (req, res) => {
     })
 });
 
-// router.options('/seed', (req, res) => {
-//     res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
-//     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-//     res.status(204).send();
-// });
-//
-// router.post('/seed', async (req, res) => {
-//    try
-//    {
-//        await Game.deleteMany({});
-//        // console.log(req.body.amount);
-//
-//        for (let i = 0; i < req.body.amount; i++) {
-//            await Game.create({
-//                title: faker.word.adverb(),
-//                description: faker.lorem.paragraph({min: 2, max: 5}),
-//                genre: faker.word.noun(),
-//                image: faker.image.url(),
-//                releaseDate: faker.date.anytime(),
-//                rating: faker.number.int({min: 1, max: 10}),
-//            });
-//        }
-//
-//        res.status(201).json({message: `${req.body.amount} games have been added!`});
-//    } catch (e) {
-//        console.log(e);
-//        res.status(400).send()
-//    }
-// });
 
-router.options('/new', (req, res) => {
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-});
-
-router.post('/new', async (req, res) => {
+router.post('/', async (req, res) => {
     try
     {
         await Game.create({
@@ -85,8 +51,8 @@ router.post('/new', async (req, res) => {
 
 
 router.options('/:id', (req, res) => {
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader('Allow', 'GET, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, DELETE, PATCH, OPTIONS');
     res.status(204).send();
 });
 
