@@ -14,10 +14,10 @@ const gameSchema = new mongoose.Schema({
         transform(doc, ret) {
             ret._links = {
                 self: {
-                    href: `${process.env.HOST}${ret._id}`
+                    href: `${process.env.HOST_URL}${ret._id}`
                 },
                 collection: {
-                    href: `${process.env.HOST}`
+                    href: `${process.env.HOST_URL}`
                 }
             }
             delete ret._id;

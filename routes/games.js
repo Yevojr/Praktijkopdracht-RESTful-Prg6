@@ -18,10 +18,10 @@ router.get('/', async (req, res) => {
            "items": games,
            "_links": {
                "self": {
-                   "href": `${process.env.HOST}`,
+                   "href": `${process.env.HOST_URL}`,
                },
                "collection": {
-                   "href": `${process.env.HOST}`
+                   "href": `${process.env.HOST_URL}`
                }
            }
        })
@@ -64,12 +64,12 @@ router.options('/:id', (req, res) => {
 router.get('/:id', async (req, res) => {
     try
     {
-        const game = await Game.findOne({_id:req.params.id})
+        const game = await Game.findById({_id:req.params.id})
 
         if (!game) {
             res.status(404).json({message: `Game not found!`});
         } else {
-            res.json({game})
+            res.json(game)
         }
 
     } catch (e) {
