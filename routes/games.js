@@ -1,7 +1,5 @@
 import express from "express"
 import Game from "../models/Game.js";
-import {faker} from "@faker-js/faker";
-
 
 const router = express.Router();
 
@@ -13,16 +11,16 @@ router.options('/', (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    const games = await Game.find();
+    const games = await Game.find({});
 
     res.json({
-        "items": [games],
+        "items": games,
         "_links": {
             "self": {
-                "href": `${process.env.HOST}games`,
+                "href": `${process.env.HOST}`,
             },
             "collection": {
-                "href": `${process.env.HOST}games`,
+                "href": `${process.env.HOST}`,
             }
         }
     })
@@ -74,16 +72,31 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// router.put('/:id', async (req, res) => {
-//     try
-//     {
-//         await Game.
-//
-//     } catch (e) {
-//         console.log(e);
-//         res.status(404).send()
-//     }
-// });
+router.put('/:id', async (req, res) => {
+    try
+    {
+        const updatedGame = await Game.findOneAndUpdate({_id: req.params.id}, {
+            title: req.body.title,
+            description: req.body.description,
+            genre: req.body.genre,
+            image: req.body.image,
+            releaseDate: req.body.releaseDate,
+            rating: req.body.rating,
+        }, {
+            new: true, runValidators: true
+        });
+
+        if(!updatedGame) {
+            res.status(404).json({message: `Game not found!`});
+        }
+
+        res.status(200).json({updatedGame});
+
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({ message: "Error updating game", error: e.message })
+    }
+});
 
 router.post('/:id', async (req, res) => {
     try
