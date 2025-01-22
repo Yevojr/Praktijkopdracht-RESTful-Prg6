@@ -28,42 +28,42 @@ router.get('/', async (req, res) => {
     })
 });
 
-router.options('/seed', (req, res) => {
+// router.options('/seed', (req, res) => {
+//     res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
+//     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+//     res.status(204).send();
+// });
+//
+// router.post('/seed', async (req, res) => {
+//    try
+//    {
+//        await Game.deleteMany({});
+//        // console.log(req.body.amount);
+//
+//        for (let i = 0; i < req.body.amount; i++) {
+//            await Game.create({
+//                title: faker.word.adverb(),
+//                description: faker.lorem.paragraph({min: 2, max: 5}),
+//                genre: faker.word.noun(),
+//                image: faker.image.url(),
+//                releaseDate: faker.date.anytime(),
+//                rating: faker.number.int({min: 1, max: 10}),
+//            });
+//        }
+//
+//        res.status(201).json({message: `${req.body.amount} games have been added!`});
+//    } catch (e) {
+//        console.log(e);
+//        res.status(400).send()
+//    }
+// });
+
+router.options('/new', (req, res) => {
     res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-    res.status(204).send();
 });
 
-router.post('/seed', async (req, res) => {
-   try
-   {
-       await Game.deleteMany({});
-       // console.log(req.body.amount);
-
-       for (let i = 0; i < req.body.amount; i++) {
-           await Game.create({
-               title: faker.word.adverb(),
-               description: faker.lorem.paragraph({min: 2, max: 5}),
-               genre: faker.word.noun(),
-               image: faker.image.url(),
-               releaseDate: faker.date.anytime(),
-               rating: faker.number.int({min: 1, max: 10}),
-           });
-       }
-
-       res.status(201).json({message: `${req.body.amount} games have been added!`});
-   } catch (e) {
-       console.log(e);
-       res.status(400).send()
-   }
-});
-
-router.options('/create', (req, res) => {
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, Authorization, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
-});
-
-router.post('/create', async (req, res) => {
+router.post('/new', async (req, res) => {
     try
     {
         await Game.create({
@@ -95,10 +95,16 @@ router.get('/:id', async (req, res) => {
     try
     {
         const game = await Game.findOne({_id:req.params.id})
-        res.json({game})
+
+        if (!game) {
+            res.status(404).json({message: `Game not found!`});
+        } else {
+            res.json({game})
+        }
+
     } catch (e) {
         console.log(e);
-        res.status(404).json({message: `Game not found!`});
+        res.status(400).send();
     }
 });
 
@@ -136,11 +142,16 @@ router.post('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try
     {
-        await Game.deleteOne({_id:req.params.id})
-        res.status(200).json({message: "Game has been deleted!"});
+        const game = await Game.deleteOne({_id:req.params.id});
+        if (!game) {
+            res.status(404).json({message: `Game not found!`});
+        } else {
+            res.status(200).json({message: "Game has been deleted!"});
+        }
+
     } catch (e) {
         console.log(e);
-        res.status(404).json({message: `Game not found!`});
+        res.status(400).send()
     }
 });
 export default router;
