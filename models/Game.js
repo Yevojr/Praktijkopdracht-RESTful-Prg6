@@ -14,7 +14,7 @@ const gameSchema = new mongoose.Schema({
         transform(doc, ret) {
             ret._links = {
                 self: {
-                    href: `${process.env.HOST}/${ret._id}`
+                    href: `${process.env.HOST}${ret._id}`
                 },
                 collection: {
                     href: `${process.env.HOST}`

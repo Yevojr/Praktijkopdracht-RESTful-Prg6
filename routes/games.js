@@ -11,19 +11,25 @@ router.options('/', (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-    const games = await Game.find({});
+   try {
+       const games = await Game.find({});
 
-    res.json({
-        "items": games,
-        "_links": {
-            "self": {
-                "href": `${process.env.HOST}`,
-            },
-            "collection": {
-                "href": `${process.env.HOST}`,
-            }
-        }
-    })
+       res.json({
+           "items": games,
+           "_links": {
+               "self": {
+                   "href": `${process.env.HOST}`,
+               },
+               "collection": {
+                   "href": `${process.env.HOST}`
+               }
+           }
+       })
+   } catch {
+       res.status(500).json({
+           message:"Something went wrong"
+       })
+   }
 });
 
 
@@ -73,9 +79,13 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+
+    const id = req.params.id;
+
     try
     {
-        const updatedGame = await Game.findOneAndUpdate({_id: req.params.id}, {
+
+        const updatedGame = await Game.findOneAndUpdate({_id: id}, {
             title: req.body.title,
             description: req.body.description,
             genre: req.body.genre,
@@ -98,25 +108,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.post('/:id', async (req, res) => {
-    try
-    {
-        await Game.updateOne({
-            title: req.body.title,
-            description: req.body.description,
-            genre: req.body.genre,
-            image: req.body.image,
-            releaseDate: req.body.releaseDate,
-            rating: req.body.rating,
-        });
-
-        res.status(201).json({message: `${req.body.title} has been added!`});
-
-    } catch (e) {
-        console.log(e);
-        res.status(400).send()
-    }
-});
 
 router.delete('/:id', async (req, res) => {
     try
@@ -125,7 +116,7 @@ router.delete('/:id', async (req, res) => {
         if (!game) {
             res.status(404).json({message: `Game not found!`});
         } else {
-            res.status(200).json({message: "Game has been deleted!"});
+            res.status(204).json({message: "Game has been deleted!"});
         }
 
     } catch (e) {
