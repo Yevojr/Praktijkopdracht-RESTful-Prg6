@@ -40,7 +40,6 @@ router.post('/', async (req, res) => {
             title: req.body.title,
             description: req.body.description,
             genre: req.body.genre,
-            image: req.body.image,
             releaseDate: req.body.releaseDate,
             rating: req.body.rating,
         });
@@ -89,7 +88,6 @@ router.put('/:id', async (req, res) => {
             title: req.body.title,
             description: req.body.description,
             genre: req.body.genre,
-            image: req.body.image,
             releaseDate: req.body.releaseDate,
             rating: req.body.rating,
         }, {
