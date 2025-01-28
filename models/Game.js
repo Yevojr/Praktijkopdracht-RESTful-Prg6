@@ -7,6 +7,7 @@ const gameSchema = new mongoose.Schema({
     releaseDate: { type: String, required: false, default: "January 1st, 2000", },
     rating: { type: Number, required: false, default: "0", },
 }, {
+    timestamps: true,
     toJSON: {
         virtuals: true,
         versionKey: false,

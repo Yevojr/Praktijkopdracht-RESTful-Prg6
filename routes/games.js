@@ -28,6 +28,7 @@ router.get('/', async (req, res) => {
 
     if (limit) {
         games = await Game.find({})
+            .sort({createdAt: -1})
             .skip((page - 1) * limit)
             .limit(limit);
     } else {
