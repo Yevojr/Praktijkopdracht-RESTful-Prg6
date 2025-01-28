@@ -11,25 +11,71 @@ router.options('/', (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-   try {
-       const games = await Game.find({});
+    let pagination = {};
+    let games = []
 
-       res.json({
-           "items": games,
-           "_links": {
-               "self": {
-                   "href": `${process.env.HOST_URL}`,
-               },
-               "collection": {
-                   "href": `${process.env.HOST_URL}`
-               }
-           }
-       })
-   } catch {
-       res.status(500).json({
-           message:"Something went wrong"
-       })
-   }
+    try
+    {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
+
+    if (page < 1 || (limit !== null && limit < 1)) {
+        return res.status(422).json({error: "Page and limit should both be grater than 0"});
+    }
+
+    const totalItems = await Game.countDocuments();
+    const totalPages = limit ? Math.ceil(totalItems / limit) : 1;
+
+    if (limit) {
+        games = await Game.find({})
+            .skip((page - 1) * limit)
+            .limit(limit);
+    } else {
+        games = await Game.find();
+    }
+
+    pagination = {
+        currentPage: page,
+        currentItems: games.length,
+        totalPages: totalPages,
+        totalItems: totalItems,
+        _links: {
+            first: {
+                page: 1,
+                href: `${process.env.HOST_URL}?page=1&limit=${limit || totalItems}`,
+            },
+            last: {
+                page: totalPages,
+                href: `${process.env.HOST_URL}?page=${totalPages}&limit=${limit || totalItems}`,
+            },
+            previous: page > 1 ? {
+                page: page -1,
+                href: `${process.env.HOST_URL}?page=${page - 1}&limit=${limit || totalItems}`,
+            } : null,
+            next: page < totalPages ? {
+                page: page + 1,
+                href: `${process.env.HOST_URL}?page=${page + 1}&limit=${limit || totalItems}`,
+            } : null
+        }
+    };
+
+    } catch (e) {
+        return res.status(500).json({error: "An error has occurred while fetching games"});
+    }
+
+    res.status(200).json({
+        items: games,
+        _links: {
+            self: {
+                href: `${process.env.HOST_URL}`,
+            },
+            collection: {
+                href: `${process.env.HOST_URL}`,
+            }
+        },
+        pagination: pagination
+    });
+
 });
 
 
