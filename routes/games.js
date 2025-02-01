@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     try
     {
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
 
     if (page < 1 || (limit !== null && limit < 1)) {
         return res.status(422).json({error: "Page and limit should both be grater than 0"});
